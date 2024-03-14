@@ -1,6 +1,6 @@
 # Imports
 # Local Imports
-from opendss_utils import OpenDSS, exclude_buses
+from opendss_utils import OpenDSS, exclude_buses,  get_buses_by_phase
 from arguments import parse_args
 
 # Main Function
@@ -19,17 +19,13 @@ def main():
     
     # Get all name of the bus
     bus_list = dss.circuit_all_bus_names() 
-    
-  
-    
+      
     # Exclude Buses to get the updated bus list
-    
     updated_bus_list=exclude_buses(args.feeder,bus_list)
     
-    print(len(updated_bus_list))
+    # Get Buslist by number of phases
+    bus_list_1_phase, bus_list_2_phases,bus_list_3_phases=get_buses_by_phase(dss,updated_bus_list)
     
-
-
     
 
 if __name__ == "__main__":

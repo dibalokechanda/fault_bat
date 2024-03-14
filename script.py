@@ -1,6 +1,6 @@
 import subprocess
 
-FEEDER_SYSTEM='123Bus' # Change to select different feeder systems
+FEEDER_SYSTEM='13Bus' # Change to select different feeder systems
 
 if FEEDER_SYSTEM=="123Bus":
     command = [
