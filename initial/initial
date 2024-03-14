@@ -1,5 +1,9 @@
 {
     "feeder": "13Bus",
     "feeder_file": "IEEE13Nodeckt.dss",
-    "folder": "initial"
+    "folder": "initial",
+    "fault_resistance_type": "fixed",
+    "fault_resistance_value": 20,
+    "fault_resistance_lower_end": 0.05,
+    "fault_resistance_upper_end": 20
 }

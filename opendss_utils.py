@@ -83,7 +83,19 @@ def get_features(dss,bus_list):
             count=count+2                                                                                                # Increase count variable
             data_template[data_index,1::2]=np.radians(data_template[data_index,1::2])                                    # Convert the angle from degree unit to radian unit
                 
-    return  data_template     
+    return  data_template    
+
+def get_nodes(dss,bus_list):
+    nodes_by_name=[]                                                                                                    
+    nodes=[]                                                                                                            
+
+    for active_bus in bus_list:                                                                                               
+        dss.circuit_set_active_bus(active_bus)                                                                            # Set a particular bus to be active
+        for node in dss.bus_nodes():                                                                                      # Loop over all the nodes of the active bus
+            nodes_by_name.append(active_bus+'_'+str(node))                                                               
+            nodes.append(active_bus+'.'+str(node))                                                                      
+
+    return nodes_by_name,nodes
 
 def get_connectivity_info(dss,bus_list):
     
@@ -104,3 +116,10 @@ def get_connectivity_info(dss,bus_list):
                 edge_list_by_bus_id.append((bus_id_map[active_bus1],bus_id_map[active_bus2]))                                      
                 
     return edge_list_by_bus_id,edge_list_by_bus_name,bus_id_map
+
+
+def get_resistance_values(dss,args):
+    if args.fault_resistance_type=="fixed":
+        print("fixed")
+    if args.fault_resistance_type=="variable":
+        print("variable")
