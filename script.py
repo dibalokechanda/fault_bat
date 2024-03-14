@@ -9,6 +9,14 @@ if FEEDER_SYSTEM=="123Bus":
         '--feeder-file', 'IEEE123Master.dss',
         '--folder', 'initial'
     ]
+    
+elif FEEDER_SYSTEM=="37Bus":
+       command = [
+        'python', 'main.py',
+        '--feeder', '37Bus',
+        '--feeder-file', 'ieee37.dss',
+        '--folder', 'initial'
+    ]
 elif FEEDER_SYSTEM=="34Bus":
         command = [
         'python', 'main.py',

@@ -1,6 +1,6 @@
 # Imports
 # Local Imports
-from opendss_utils import OpenDSS, exclude_buses,  get_buses_by_phase
+from opendss_utils import OpenDSS, exclude_buses, get_buses_by_phase, get_connectivity_info
 from arguments import parse_args
 
 # Main Function
@@ -19,6 +19,8 @@ def main():
     
     # Get all name of the bus
     bus_list = dss.circuit_all_bus_names() 
+    
+    print(bus_list)
       
     # Exclude Buses to get the updated bus list
     updated_bus_list=exclude_buses(args.feeder,bus_list)
@@ -26,6 +28,13 @@ def main():
     # Get Buslist by number of phases
     bus_list_1_phase, bus_list_2_phases,bus_list_3_phases=get_buses_by_phase(dss,updated_bus_list)
     
+    # Get connectivity info of the feeder system
+    
+    edge_list_by_bus_id,edge_list_by_bus_name,bus_id_map=get_connectivity_info(dss,updated_bus_list)
+    
+    print(updated_bus_list)
+    
+
     
 
 if __name__ == "__main__":
