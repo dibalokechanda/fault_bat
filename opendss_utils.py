@@ -25,19 +25,17 @@ class OpenDSS():
     def get_dss_obj(self):
         return self.dss, self.dss_file
     
-    
-
 def exclude_buses(feeder_name,bus_list):
-    """Exclude pre-specified buses defined in a python dictionary
+    """Exclude pre-specified buses
     """
-    if feeder_name=="34Bus":
+    if feeder_name=="13Bus":
+        bus_to_exclude =['sourcebus','634']
+    elif feeder_name=="34Bus":
         bus_to_exclude =['sourcebus','888','890']
-        updated_bus_list = [bus for bus in bus_list if bus not in bus_to_exclude]
     elif feeder_name=="123Bus":
-    
-    elif feeder_name=="13Bus":
-         updated_bus_list=bus_list
+        bus_to_exclude =['610','300_open','94_open','150']
         
-    return 
+    updated_bus_list = [bus for bus in bus_list if bus not in bus_to_exclude]
+    return updated_bus_list
         
     
