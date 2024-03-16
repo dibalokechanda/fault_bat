@@ -1,10 +1,14 @@
 # Imports
 # Local Imports
-from opendss_utils import OpenDSS, exclude_buses, get_buses_by_phase, get_connectivity_info, get_resistance_values
+from opendss_utils import OpenDSS, exclude_buses, get_buses_by_phase, get_connectivity_info, get_resistance_values,get_load_values
 from arguments import parse_args
 
-# Main Function
-def main():
+def initialize():
+    """
+     - Get the arguments passed 
+     - Initialize the dss object
+    """
+    
     # Handle the arguments passed in 
     argument_parser=parse_args()       
     argument_parser.dump_json()
@@ -16,6 +20,15 @@ def main():
     # Compile the dss file and solve power flow 
     dss.text(f"compile [{dss_file}]")
     dss.text(f"solve")
+    
+    return args,dss
+    
+# Main Function
+def generate_feeder_infos():
+    """Generate necessary information for fault simulation
+    """
+   
+    args, dss=initialize()
     
     # Get name of all the buses
     bus_list = dss.circuit_all_bus_names() 
@@ -30,9 +43,14 @@ def main():
     edge_list_by_bus_id,edge_list_by_bus_name,bus_id_map=get_connectivity_info(dss,updated_bus_list)
     
     # Get fault resistance values
-    get_resistance_values(args,viz=True)
+    fault_resistances=get_resistance_values(args,viz=False,num_bins=20,decimal_precision=2)
     
-
+    # Get load values 
+    load_values=get_load_values(args,decimal_precision=2)
+    
+    
+def main():
+    pass
     
 
 if __name__ == "__main__":

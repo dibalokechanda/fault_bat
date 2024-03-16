@@ -121,11 +121,13 @@ def get_connectivity_info(dss,bus_list):
     return edge_list_by_bus_id,edge_list_by_bus_name,bus_id_map
 
 
-def get_resistance_values(args,viz=False):
+def get_resistance_values(args,viz=False,**kwargs):
     """Generate resistance value for fault simulation
        Two ways are specified for generating the resistance values: fixed and variable
        - fixed: returns the same value repeated for number of sampels 
        - variable: Assuming data is generated for three-phase (node) bus, for each phase (node) a random seed is set and resistance value is sampled from a uniform distribution
+       
+    If viz is set to True it will create a histogram of sampled values and save the image to --folder
     """
     if args.fault_resistance_type=="fixed":
         number_of_samples=args.number_of_samples_for_each_node
@@ -133,6 +135,10 @@ def get_resistance_values(args,viz=False):
         fault_resistances=[fault_resistance_val]*number_of_samples
         
     if args.fault_resistance_type=="variable":
+        
+        # Check if decimal precision was passed in as kwargs
+        decimal_precision = kwargs.get('decimal_precision', 2)  # Using .get() method to get the value or a default value if not found
+
         # Extract lower and upper bound of the uniform distribution from the passed arguments
         lower_bound=args.fault_resistance_lower_end
         upper_bound=args.fault_resistance_upper_end
@@ -146,12 +152,12 @@ def get_resistance_values(args,viz=False):
             seed=random.randint(1,1000)
             np.random.seed(seed)
         # Generate fault resistance value by sampling from a uniform distribution
-            fault_resistance_samples_per_node= list(np.round(np.random.uniform(lower_bound,upper_bound,number_of_samples), decimals=2))
+            fault_resistance_samples_per_node= list(np.round(np.random.uniform(lower_bound,upper_bound,number_of_samples), decimals=decimal_precision))
             fault_resistances.extend(fault_resistance_samples_per_node)  
                 
     if viz==True:
-        print("Here")
-        sns.histplot(fault_resistances, bins=10, kde=False)  # Adjust bins as needed
+        num_bins = kwargs.get('num_bins', 10)  # Using .get() method to get the value or a default value if not found
+        sns.histplot(fault_resistances, bins=num_bins, kde=False)  
         plt.xlabel('Fault Resistance Values')
         plt.ylabel('Frequency')
         
@@ -161,5 +167,27 @@ def get_resistance_values(args,viz=False):
 
               
     return fault_resistances
+
+
+def get_load_values(args,**kwargs):
+    if args.change_load_values=='no':
+        pass
+    
+    elif args.change_load_values=='yes':
+        # Check if decimal precision was passed in as kwargs
+        decimal_precision = kwargs.get('decimal_precision', 2)  # Using .get() method to get the value or a default value if not found
+        
+        upper_bound_KW=args.load_value_KW_lower_end
+        lower_bound_KW=args.load_value_KW_upper_end
+        
+        # Extract number of samples 
+        number_of_samples=args.number_of_samples_for_each_node
+        
+        # Generate load values by sampling from a uniform distribution
+        lds= list(np.round(np.random.uniform(upper_bound_KW,lower_bound_KW,number_of_samples),decimals=decimal_precision))                                                       
+        
+        return lds
+
+
 
 
