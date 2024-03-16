@@ -29,7 +29,8 @@ def main():
     # Get connectivity info of the feeder system
     edge_list_by_bus_id,edge_list_by_bus_name,bus_id_map=get_connectivity_info(dss,updated_bus_list)
     
-    get_resistance_values(dss,args)
+    # Get fault resistance values
+    get_resistance_values(args,viz=True)
     
 
     

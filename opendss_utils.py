@@ -4,9 +4,12 @@ import py_dss_interface
 # Python Libraries Import
 import os 
 import pathlib
+import random
 
 # Additional Import
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
  
 class OpenDSS():
     """Interfacing to OpenDSS with py_dss_interface
@@ -118,8 +121,45 @@ def get_connectivity_info(dss,bus_list):
     return edge_list_by_bus_id,edge_list_by_bus_name,bus_id_map
 
 
-def get_resistance_values(dss,args):
+def get_resistance_values(args,viz=False):
+    """Generate resistance value for fault simulation
+       Two ways are specified for generating the resistance values: fixed and variable
+       - fixed: returns the same value repeated for number of sampels 
+       - variable: Assuming data is generated for three-phase (node) bus, for each phase (node) a random seed is set and resistance value is sampled from a uniform distribution
+    """
     if args.fault_resistance_type=="fixed":
-        print("fixed")
+        number_of_samples=args.number_of_samples_for_each_node
+        fault_resistance_val=args.fault_resistance_value
+        fault_resistances=[fault_resistance_val]*number_of_samples
+        
     if args.fault_resistance_type=="variable":
-        print("variable")
+        # Extract lower and upper bound of the uniform distribution from the passed arguments
+        lower_bound=args.fault_resistance_lower_end
+        upper_bound=args.fault_resistance_upper_end
+        
+        # Extract number of samples 
+        number_of_samples=args.number_of_samples_for_each_node
+        
+        fault_resistances=[]
+        for _ in range(3):
+        # Set a random seed 
+            seed=random.randint(1,1000)
+            np.random.seed(seed)
+        # Generate fault resistance value by sampling from a uniform distribution
+            fault_resistance_samples_per_node= list(np.round(np.random.uniform(lower_bound,upper_bound,number_of_samples), decimals=2))
+            fault_resistances.extend(fault_resistance_samples_per_node)  
+                
+    if viz==True:
+        print("Here")
+        sns.histplot(fault_resistances, bins=10, kde=False)  # Adjust bins as needed
+        plt.xlabel('Fault Resistance Values')
+        plt.ylabel('Frequency')
+        
+        file_path = os.path.join('../../',args.folder,f'fault_resistance_histogram.png')
+
+        plt.savefig(file_path)
+
+              
+    return fault_resistances
+
+
