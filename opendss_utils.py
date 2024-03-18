@@ -5,11 +5,14 @@ import py_dss_interface
 import os 
 import pathlib
 import random
+from collections import defaultdict
 
-# Additional Import
+
+# Additional Imports
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import networkx as nx
  
 class OpenDSS():
     """Interfacing to OpenDSS with py_dss_interface
@@ -188,6 +191,39 @@ def get_load_values(args,**kwargs):
         
         return lds
 
+def get_one_hop_buses(edge_list_by_bus_name):
+    """Generate bus list within one-hop for each bus in the feeder system
+    """
+    neighborhood_dict_1_hop_by_bus_name= defaultdict(set)
+    # Iterate over each edge and add the neighboring nodes
+    for node1, node2 in edge_list_by_bus_name:
+        neighborhood_dict_1_hop_by_bus_name[node1].add(node2)
+        neighborhood_dict_1_hop_by_bus_name[node2].add(node1)
+
+    # Convert the sets to lists 
+    neighborhood_dict_1_hop_by_bus_name = {node: list(neighborhood.union({node})) for node, neighborhood in neighborhood_dict_1_hop_by_bus_name.items()}
+    
+    return neighborhood_dict_1_hop_by_bus_name
 
 
+def get_two_hop_buses(edge_list_by_bus_name):
+    """Generate bus list within two-hop for each bus in the feeder system
+    """
+    # Create an empty graph
+    graph = nx.Graph()
+
+    # Add edges from the edge_list_by_bus_name
+    graph.add_edges_from(edge_list_by_bus_name)
+
+    # Get the 1-hop and 2-hop neighbors for every node
+    neighborhood_dict_2_hop_by_bus_name = {}
+    for node in graph.nodes():
+        neighbors = set(graph.neighbors(node))
+        neighborhood_dict_2_hop_by_bus_name[node] = neighbors.copy()
+        for neighbor in neighbors:
+            neighborhood_dict_2_hop_by_bus_name[node].update(set(graph.neighbors(neighbor)))
+
+    neighborhood_dict_2_hop_by_bus_name = {node: list(neighborhood.union({node})) for node, neighborhood in neighborhood_dict_2_hop_by_bus_name.items()}
+
+    return neighborhood_dict_2_hop_by_bus_name
 

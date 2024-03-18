@@ -3,7 +3,7 @@
 import os
 
 # Local Imports
-from opendss_utils import OpenDSS, exclude_buses, get_buses_by_phase, get_connectivity_info, get_resistance_values,get_load_values
+from opendss_utils import OpenDSS, exclude_buses, get_buses_by_phase, get_connectivity_info, get_resistance_values,get_load_values,get_one_hop_buses, get_two_hop_buses
 from arguments import parse_args
 from utils import store_feeder_info_to_json
 
@@ -34,6 +34,8 @@ def generate_feeder_infos(store_info=False):
         - Get connectivity information of the feeder system
         - Get the fault resistance values for fault simulation
         - Get the load values for fault simulation 
+        - Get the one-hop bus names for each bus
+        - Get the two-hop bus names for each bus
     """
    
     args, dss=initialize()
@@ -55,6 +57,12 @@ def generate_feeder_infos(store_info=False):
     
     # Get load values 
     load_values=get_load_values(args,decimal_precision=2)
+    
+    # Get one-hop bus names for each bus
+    neighborhood_dict_1_hop_by_bus_name=get_one_hop_buses(edge_list_by_bus_name)
+    
+    # Get two-hop bus names for each bus
+    neighborhood_dict_2_hop_by_bus_name= get_two_hop_buses(edge_list_by_bus_name)
     
     # Dictionary containig info related to the feeder system
     feeder_infos={'bus_list':bus_list,
