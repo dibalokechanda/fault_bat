@@ -45,7 +45,7 @@ def exclude_buses(feeder_name,bus_list):
         bus_to_exclude =['610','300_open','94_open','150']
         
     updated_bus_list = [bus for bus in bus_list if bus not in bus_to_exclude]
-    return updated_bus_list
+    return bus_to_exclude,updated_bus_list
         
         
 def get_buses_by_phase(dss,updated_bus_list):

@@ -1,6 +1,6 @@
 import subprocess
 
-FEEDER_SYSTEM='123Bus' # Change to select different feeder systems
+FEEDER_SYSTEM='37Bus' # Change to select different feeder systems
 
 if FEEDER_SYSTEM=="123Bus":
     command = [
@@ -24,9 +24,9 @@ elif FEEDER_SYSTEM=="37Bus":
         '--feeder', '37Bus',
         '--feeder-file', 'ieee37.dss',
         '--fault-resistance-type','fixed',
-        '--fault-resistance-value',20,
-        '--fault-resistance-lower-end', 0.05,
-        '--fault-resistance-upper-end', 20,
+        '--fault-resistance-value','20',
+        '--fault-resistance-lower-end', '0.05',
+        '--fault-resistance-upper-end', '20',
         '--folder', 'initial'
     
     ]

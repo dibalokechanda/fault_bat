@@ -1,7 +1,11 @@
-# Imports
+#Imports
+# Python Imports
+import os
+
 # Local Imports
 from opendss_utils import OpenDSS, exclude_buses, get_buses_by_phase, get_connectivity_info, get_resistance_values,get_load_values
 from arguments import parse_args
+from utils import store_feeder_info_to_json
 
 def initialize():
     """
@@ -23,9 +27,13 @@ def initialize():
     
     return args,dss
     
-# Main Function
-def generate_feeder_infos():
+def generate_feeder_infos(store_info=False):
     """Generate necessary information for fault simulation
+        - Gets the bus list of the feeder system (after exclusion of extra buses)
+        - Get bus list by number of phases 
+        - Get connectivity information of the feeder system
+        - Get the fault resistance values for fault simulation
+        - Get the load values for fault simulation 
     """
    
     args, dss=initialize()
@@ -34,7 +42,7 @@ def generate_feeder_infos():
     bus_list = dss.circuit_all_bus_names() 
       
     # Exclude Buses to get the updated bus list
-    updated_bus_list=exclude_buses(args.feeder,bus_list)
+    bus_to_exclude,updated_bus_list=exclude_buses(args.feeder,bus_list)
     
     # Get Buslist by number of phases
     bus_list_1_phase, bus_list_2_phases,bus_list_3_phases=get_buses_by_phase(dss,updated_bus_list)
@@ -48,9 +56,25 @@ def generate_feeder_infos():
     # Get load values 
     load_values=get_load_values(args,decimal_precision=2)
     
+    # Dictionary containig info related to the feeder system
+    feeder_infos={'bus_list':bus_list,
+                  'updated_bus_list':updated_bus_list,
+                  'bus_to_exclude':bus_to_exclude,
+                  'bus_list_1_phase': bus_list_1_phase,
+                  'bus_list_2_phases': bus_list_2_phases,
+                  'bus_list_3_phases': bus_list_3_phases,
+                  'edge_list_by_bus_id': edge_list_by_bus_id,
+                  'edge_list_by_bus_name':edge_list_by_bus_name,
+                  'bus_id_map':bus_id_map}
     
+    if store_info:
+         # Store the info related to the feeder system to a json file
+        store_feeder_info_to_json(args,feeder_infos)
+        
+    return feeder_infos
+         
 def main():
-    pass
+    feeder_infos=generate_feeder_infos(store_info=False)
     
 
 if __name__ == "__main__":
