@@ -46,6 +46,9 @@ def generate_feeder_infos(args,dss,store_info=False):
     # Get Buslist by number of phases
     bus_list_1_phase, bus_list_2_phases,bus_list_3_phases=get_buses_by_phase(dss,bus_list)
     
+    # Get connected load names and the name of the buses with connected loads
+    bus_with_loads_connected,connected_loads_name=get_connected_loads(dss,bus_list)
+    
     # Get connectivity info of the feeder system
     edge_list_by_bus_id,edge_list_by_bus_name,bus_id_map=get_connectivity_info(dss,bus_list)
       
@@ -67,10 +70,13 @@ def generate_feeder_infos(args,dss,store_info=False):
                   'bus_list_3_phases': bus_list_3_phases,
                   'edge_list_by_bus_id': edge_list_by_bus_id,
                   'edge_list_by_bus_name':edge_list_by_bus_name,
-                  'bus_id_map':bus_id_map}
-    
+                  'bus_id_map':bus_id_map,
+                  'bus_with_loads_connected':bus_with_loads_connected,
+                  'connected_loads_name':connected_loads_name}
+   
     if store_info:
         # Store the info related to the feeder system to a json file
+       
         store_feeder_info_to_json(args,feeder_infos)
         
     # Create data class to store feeder related informations    
@@ -122,17 +128,15 @@ def main():
     args, dss=initialize()
     
     # Collect the feeder infos
-    feeder=generate_feeder_infos(args,dss,store_info=False)
+    feeder=generate_feeder_infos(args,dss,store_info=True)
     fault_information=generate_fault_infos(args)
     
     # Get the fault simulator object 
     fault_simulaor=FaultSimulation(dss,feeder,fault_information)
     
-    fault_simulaor.fault_simulation_lg()
+    # fault_simulaor.fault_simulation_lg()
     
-
     
-
 if __name__ == "__main__":
     main()
     

@@ -13,6 +13,8 @@ def store_feeder_info_to_json(args,infos):
     feeder_info['num_of_excluded_buses']=len(infos['bus_list_before_exclusion'])-len(infos['bus_list'])
     feeder_info['num_single_phase_buses'],feeder_info['num_two_phase_buses'],feeder_info['num_three_phase_buses']= len(infos['bus_list_1_phase']),len(infos['bus_list_2_phases']),len(infos['bus_list_3_phases'])
     feeder_info['num_edges']=int(len(infos['edge_list_by_bus_name'])/2)
+    feeder_info['number_of_buses_with_connected_loads']=len(infos['bus_with_loads_connected'])
+    feeder_info['number_of_loads']=len(infos['connected_loads_name'])
     
     folder_name = os.path.splitext(args.folder)[0]
     json_file='feeder_infos' # json file name with the same name as the folder

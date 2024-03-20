@@ -82,6 +82,17 @@ def get_nodes(dss,bus_list):
 
     return nodes_by_name,nodes
 
+def get_connected_loads(dss,bus_list):
+    bus_with_loads_connected=[]
+    connected_loads_name=[]
+    for active_bus in bus_list:
+        dss.circuit_set_active_bus(active_bus)
+        if len(dss.bus_load_list())!=0:
+            connected_loads_name.append(dss.bus_load_list())
+            bus_with_loads_connected.append(active_bus)
+            
+    return bus_with_loads_connected,connected_loads_name
+
 def get_connectivity_info(dss,bus_list):
     
     edge_list_by_bus_name=[]                                                                                                       

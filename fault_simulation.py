@@ -64,7 +64,6 @@ class FaultSimulation:
                 for idx,fr in enumerate(self.fault_information.fault_resistances):                                          # Enumerate over the fault resistnace                              
                     fault_obj=f'Fault.{fault_name}_{str(idx)}'
                     
-                    print(fault_obj)
                     fault_command = f'New Fault.{fault_name}_{str(idx)} Bus1={fault_node} Phases=1 r={fr}'                  # Command for the LG Fault
                     fault_obj_deactivate_command=f'Fault.{fault_name}_{str(idx)}.enabled=NO'                                # Command for the Fault Object Deactivation
                      
@@ -84,7 +83,8 @@ class FaultSimulation:
                     self.fault_currrents_labels.append(abs(self.dss.cktelement_currents()[0]))
                     
                     # Execute the fault object deactivation command
-                    self.dss.text(fault_obj_deactivate_command)                                                           
+                    self.dss.text(fault_obj_deactivate_command)        
+                                                                       
     def fault_simulation_ll():
         pass
     
