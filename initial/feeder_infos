@@ -1,0 +1,12 @@
+{
+    "name_of_the_feeder": "37Bus",
+    "num_of_original_buses": 39,
+    "num_of_buses": 38,
+    "num_of_excluded_buses": 1,
+    "num_single_phase_buses": 0,
+    "num_two_phase_buses": 0,
+    "num_three_phase_buses": 38,
+    "num_edges": 37,
+    "number_of_buses_with_connected_loads": 25,
+    "number_of_loads": 25
+}

@@ -1,5 +1,6 @@
 import py_dss_interface    
 import numpy as np
+from tqdm import tqdm
 
 class FaultSimulation:
     
@@ -55,11 +56,8 @@ class FaultSimulation:
         
     def fault_simulation_lg(self):
 
-        for fault_name,fault_node in zip(self.feeder.nodes_by_name,self.feeder.nodes):                                      # Enumerate over the fault name and fault nodes
-            
+        for fault_name,fault_node in tqdm(zip(self.feeder.nodes_by_name,self.feeder.nodes),desc="LG Fault Simulation",total=len(self.feeder.nodes)): # Enumerate over the fault name and fault nodes
             self.dss.circuit_set_active_bus(fault_name.split('_')[0])                                                       # Set a particular bus to be active
-             
-          
             if len(self.dss.bus_nodes())==3:                                                                                # Check if the bus has 3 nodes | If the bus has 3 nodes only then we create the fault   
                 for idx,fr in enumerate(self.fault_information.fault_resistances):                                          # Enumerate over the fault resistnace                              
                     fault_obj=f'Fault.{fault_name}_{str(idx)}'
