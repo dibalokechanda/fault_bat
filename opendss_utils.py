@@ -228,5 +228,13 @@ def get_two_hop_buses(edge_list_by_bus_name):
     return neighborhood_dict_2_hop_by_bus_name
 
 
-def get_nodes(bus_list):
-    pass
+def get_nodes(dss,bus_list):
+    """Get all the possible nodes for all the buses
+    """  
+    nodes=[]                                                                                                            # A list to contain the possible nodes
+    for active_bus in bus_list:                                                                                         # Enumerate over all buses
+        dss.circuit_set_active_bus(active_bus)                                                                          # Set a particular bus to be active
+        for node in dss.bus_nodes():                                                                                    # Loop over all the nodes of the active bus
+            nodes.append(active_bus+'.'+str(node))                                                                      # Get the node by concatenating the bus name and the node name
+   
+    return nodes

@@ -4,7 +4,7 @@ import os
 from dataclasses import dataclass
 
 # Local Imports
-from opendss_utils import OpenDSS, exclude_buses, get_buses_by_phase, get_connectivity_info, get_resistance_values,get_load_values,get_one_hop_buses, get_two_hop_buses
+from opendss_utils import * 
 from arguments import parse_args
 from utils import store_feeder_info_to_json
 
@@ -48,6 +48,9 @@ def generate_feeder_infos(args,dss,store_info=False):
     # Get connectivity info of the feeder system
     edge_list_by_bus_id,edge_list_by_bus_name,bus_id_map=get_connectivity_info(dss,updated_bus_list)
       
+    # Get nodes for all the buses
+    nodes=get_nodes(dss,updated_bus_list)  
+    
     # Get one-hop bus names for each bus
     neighborhood_dict_1_hop_by_bus_name=get_one_hop_buses(edge_list_by_bus_name)
     
@@ -79,6 +82,7 @@ def generate_feeder_infos(args,dss,store_info=False):
         bus_list_3_phases: list
         edge_list_by_bus_id: list[tuple[int]]
         edge_list_by_bus_name: list[tuple[str]]
+        nodes:list[str]
         bus_id_map: dict
         neighborhood_dict_1_hop_by_bus_name:dict
         neighborhood_dict_2_hop_by_bus_name:dict
@@ -86,7 +90,7 @@ def generate_feeder_infos(args,dss,store_info=False):
     # Construct the feeder object which contains the all the information related to feeder
     feeder = FeederInformation(args.feeder,updated_bus_list,bus_list_1_phase,
                                bus_list_2_phases,bus_list_3_phases,edge_list_by_bus_id,
-                               edge_list_by_bus_name,bus_id_map,neighborhood_dict_1_hop_by_bus_name,
+                               edge_list_by_bus_name,nodes,bus_id_map,neighborhood_dict_1_hop_by_bus_name,
                                neighborhood_dict_2_hop_by_bus_name)
     return feeder
 
@@ -118,6 +122,7 @@ def main():
     # Collect the feeder infos
     feeder=generate_feeder_infos(args,dss,store_info=False)
     fault_information=generate_fault_infos(args)
+    
 
     
 
