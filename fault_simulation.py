@@ -4,11 +4,34 @@ import numpy as np
 class FaultSimulation:
     
     def __init__(self,dss,feeder,fault_information):
+        
         self.dss=dss
         self.feeder=feeder
         self.fault_information=fault_information
         
+        # Dictionary that maps fault types to a integer number
+        self.fault_class_map={'LG':0,'LL':1,'LLG':2,'LLL':3,'LLLG':4,'Non_Fault':5}  
         
+        # Separate lists to contain the feature matrics by fault type                
+        self.dataset_lg=[]                                                                                                                  
+        self.dataset_ll=[]                                                                                                                 
+        self.dataset_llg=[]                                                                                                                      
+        self.dataset_lll=[] 
+        self.dataset_lllg=[] 
+        self.dataset_non_fault=[] 
+        
+        # List to contain the entire fault dataset
+        self.dataset=[]
+        
+        # Separate lists to hold the labels for the fault 
+        self.fault_detection=[]
+        self.labels_by_fault_node_name=[]                                                                                                        
+        self.labels=[]    
+        self.fault_class=[]                                                                                                                     
+        self.fault_resistance=[]                                                                                                               
+        self.fault_currrents=[]
+    
+                                                                                                                                                    
     def get_features(dss,bus_list):    
         """
         Get features of all the buses in the feeder system
@@ -30,4 +53,20 @@ class FaultSimulation:
         return  data_template    
 
         
+    def fault_simulation_lg():
+        pass
     
+    def fault_simulation_ll():
+        pass
+    
+    def fault_simulation_llg():
+        pass
+    
+    def fault_simulation_lll():
+        pass
+    
+    def fault_simulation_llg():
+        pass
+    
+    def non_fault_simulation():
+        pass
