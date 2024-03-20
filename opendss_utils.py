@@ -227,3 +227,6 @@ def get_two_hop_buses(edge_list_by_bus_name):
 
     return neighborhood_dict_2_hop_by_bus_name
 
+
+def get_nodes(bus_list):
+    pass
