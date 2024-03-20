@@ -211,9 +211,11 @@ def get_nodes(dss,bus_list):
     """Get all the possible nodes for all the buses
     """  
     nodes=[]                                                                                                            # A list to contain the possible nodes
+    nodes_by_name=[]                                                                                                    # A list to contain the possible nodes (in a different format to assign the fault name attribute)
     for active_bus in bus_list:                                                                                         # Enumerate over all buses
         dss.circuit_set_active_bus(active_bus)                                                                          # Set a particular bus to be active
         for node in dss.bus_nodes():                                                                                    # Loop over all the nodes of the active bus
+            nodes_by_name.append(active_bus+'_'+str(node))                                                               # Get the name of the fault by concatenating the bus name and the node name
             nodes.append(active_bus+'.'+str(node))                                                                      # Get the node by concatenating the bus name and the node name
    
-    return nodes
+    return nodes,nodes_by_name

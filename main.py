@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 # Local Imports
 from opendss_utils import * 
+from fault_simulation import FaultSimulation
 from arguments import parse_args
 from utils import store_feeder_info_to_json
 
@@ -36,20 +37,20 @@ def generate_feeder_infos(args,dss,store_info=False):
         - Get the one-hop bus names for each bus
         - Get the two-hop bus names for each bus
     """    
-    # Get name of all the buses
-    bus_list = dss.circuit_all_bus_names() 
+    # Get name of all the buses that is returned by py_dss_interface
+    bus_list_before_exclusion = dss.circuit_all_bus_names() 
       
     # Exclude Buses to get the updated bus list
-    bus_to_exclude,updated_bus_list=exclude_buses(args.feeder,bus_list)
+    bus_to_exclude,bus_list=exclude_buses(args.feeder,bus_list_before_exclusion)
     
     # Get Buslist by number of phases
-    bus_list_1_phase, bus_list_2_phases,bus_list_3_phases=get_buses_by_phase(dss,updated_bus_list)
+    bus_list_1_phase, bus_list_2_phases,bus_list_3_phases=get_buses_by_phase(dss,bus_list)
     
     # Get connectivity info of the feeder system
-    edge_list_by_bus_id,edge_list_by_bus_name,bus_id_map=get_connectivity_info(dss,updated_bus_list)
+    edge_list_by_bus_id,edge_list_by_bus_name,bus_id_map=get_connectivity_info(dss,bus_list)
       
     # Get nodes for all the buses
-    nodes=get_nodes(dss,updated_bus_list)  
+    nodes,nodes_by_name=get_nodes(dss,bus_list)  
     
     # Get one-hop bus names for each bus
     neighborhood_dict_1_hop_by_bus_name=get_one_hop_buses(edge_list_by_bus_name)
@@ -58,8 +59,8 @@ def generate_feeder_infos(args,dss,store_info=False):
     neighborhood_dict_2_hop_by_bus_name= get_two_hop_buses(edge_list_by_bus_name)
     
     # Dictionary containig info related to the feeder system
-    feeder_infos={'bus_list':bus_list,
-                  'updated_bus_list':updated_bus_list,
+    feeder_infos={'bus_list_before_exclusion':bus_list_before_exclusion,
+                  'bus_list':bus_list,
                   'bus_to_exclude':bus_to_exclude,
                   'bus_list_1_phase': bus_list_1_phase,
                   'bus_list_2_phases': bus_list_2_phases,
@@ -76,22 +77,23 @@ def generate_feeder_infos(args,dss,store_info=False):
     @dataclass
     class FeederInformation:
         feeder_name:str
-        updated_bus_list: list
+        bus_list: list
         bus_list_1_phase: list
         bus_list_2_phases: list
         bus_list_3_phases: list
         edge_list_by_bus_id: list[tuple[int]]
         edge_list_by_bus_name: list[tuple[str]]
         nodes:list[str]
+        nodes_by_name:list[str]
         bus_id_map: dict
         neighborhood_dict_1_hop_by_bus_name:dict
         neighborhood_dict_2_hop_by_bus_name:dict
                 
     # Construct the feeder object which contains the all the information related to feeder
-    feeder = FeederInformation(args.feeder,updated_bus_list,bus_list_1_phase,
-                               bus_list_2_phases,bus_list_3_phases,edge_list_by_bus_id,
-                               edge_list_by_bus_name,nodes,bus_id_map,neighborhood_dict_1_hop_by_bus_name,
-                               neighborhood_dict_2_hop_by_bus_name)
+    feeder = FeederInformation(args.feeder,bus_list,
+                                bus_list_1_phase, bus_list_2_phases,bus_list_3_phases
+                               ,edge_list_by_bus_id,edge_list_by_bus_name,nodes,nodes_by_name,bus_id_map,
+                               neighborhood_dict_1_hop_by_bus_name,neighborhood_dict_2_hop_by_bus_name)
     return feeder
 
 
@@ -122,6 +124,11 @@ def main():
     # Collect the feeder infos
     feeder=generate_feeder_infos(args,dss,store_info=False)
     fault_information=generate_fault_infos(args)
+    
+    # Get the fault simulator object 
+    fault_simulaor=FaultSimulation(dss,feeder,fault_information)
+    
+    fault_simulaor.fault_simulation_lg()
     
 
     
