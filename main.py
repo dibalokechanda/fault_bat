@@ -133,9 +133,10 @@ def main():
     fault_information=generate_fault_infos(args)
     
     # Get the fault simulator object 
-    fault_simulaor=FaultSimulation(dss,feeder,fault_information)
+    fault_simulator=FaultSimulation(dss,feeder,fault_information)
     
-    fault_simulaor.fault_simulation_lg()
+    fault_simulator.fault_simulation_lg()
+    fault_simulator.fault_simulation_ll()
     
     
 if __name__ == "__main__":
