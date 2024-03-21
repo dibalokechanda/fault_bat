@@ -1,7 +1,10 @@
 import py_dss_interface    
+
+import itertools
+
 import numpy as np
 from tqdm import tqdm
-import itertools
+from sklearn.preprocessing import StandardScaler
 
 class FaultSimulation:
     
@@ -53,12 +56,21 @@ class FaultSimulation:
                 data_template[data_index,1::2]=np.radians(data_template[data_index,1::2])                                    # Convert the angle from degree unit to radian unit
                     
         return  data_template    
+    
+    
+    def standardize(self,final_dataset):
+        scalers = {}
+        for i in range(final_dataset.shape[1]):
+            scalers[i] = StandardScaler()
+            final_dataset[:, i, :] = scalers[i].fit_transform(final_dataset[:, i, :])         
+            
+        return final_dataset                                                                               
 
         
     def fault_simulation_lg(self):
         """Perform LG Fault Simulation
         """
-        # Keep track of number of simulations
+        # Keep track of number of simulations (for debugging purpose)
         count_lg=0
 
         # Enumerate over the fault name and fault nodes
@@ -76,7 +88,7 @@ class FaultSimulation:
                     
                     # Get the features of the buses 
                     self.dataset.append(self.get_features())                                                        
-                    self.dataset_lg.append(self.get_features())
+                    self.dataset_lg.append(self.get_features())              
                                                     
                     # Get the labels 
                     self.fault_detection_labels.append(1)                                                                                      
@@ -91,7 +103,10 @@ class FaultSimulation:
                     
                     # Increment count of simulations performed
                     count_lg+=1  
-                                             
+        
+         # Convert the list of 2D dataset matrices into 3D matrix and standarize it 
+        final_dataset_lg= self.standardize(np.stack(self.dataset_lg))  
+        return final_dataset_lg                                         
     
                               
     def fault_simulation_ll(self):
@@ -104,7 +119,7 @@ class FaultSimulation:
             if fault_node1.split('.')[0] == fault_node2.split('.')[0] and fault_node1.split('.')[1] != fault_node2.split('.')[1] and int(fault_node1.split('.')[1]) < int(fault_node2.split('.')[1])  :
                 ll_nodes.append((fault_node1, fault_node2))
                 
-        # Keep track of number of simulations
+        # Keep track of number of simulations (for debugging purpose)
         count_ll=0
 
         for ll_node in tqdm(ll_nodes,desc="LL Fault Simulation"):
@@ -136,7 +151,11 @@ class FaultSimulation:
                     self.dss.text(fault_obj_deactivate_command)                                                                                    
                     
                     # Increment count of simulations performed
-                    count_ll=count_ll+1
+                    count_ll+=1
+                    
+        # Convert the list of 2D dataset matrices into 3D matrix and standarize it 
+        final_dataset_ll= self.standardize(np.stack(self.dataset_ll))  
+        return final_dataset_ll 
 
     
     def fault_simulation_llg():
