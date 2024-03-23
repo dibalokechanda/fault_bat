@@ -76,8 +76,6 @@ def generate_feeder_infos(args,dss,store_info=False):
    
     if store_info:
         # Store the info related to the feeder system to a json file
-       
-       
         store_feeder_info_to_json(args,feeder_infos)
         
     # Create data class to store feeder related informations    
