@@ -55,7 +55,15 @@ elif FEEDER_SYSTEM=="13Bus":
         'python', 'main.py',
         '--feeder', '13Bus',
         '--feeder-file', 'IEEE13Nodeckt.dss',
-        '--folder', 'initial'
+        '--fault-resistance-type','fixed',
+        '--fault-resistance-value',20,
+        '--fault-resistance-lower-end', 0.05,
+        '--fault-resistance-upper-end', 20,
+        '--folder', 'initial' ,
+        '--number-of-samples-for-each-node','100',
+        '--change-load-values','yes',
+        '--load-value-KW-lower-end','20',
+        '--load-value-KW-upper-end','80'  
     ]
     
 subprocess.run(command)
