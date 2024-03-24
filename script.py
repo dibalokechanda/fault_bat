@@ -23,11 +23,15 @@ elif FEEDER_SYSTEM=="37Bus":
         'python', 'main.py',
         '--feeder', '37Bus',
         '--feeder-file', 'ieee37.dss',
-        '--fault-resistance-type','fixed',
+        '--fault-resistance-type','variable',
         '--fault-resistance-value','20',
         '--fault-resistance-lower-end', '0.05',
         '--fault-resistance-upper-end', '20',
-        '--folder', 'initial'
+        '--folder', 'initial',
+        '--number-of-samples-for-each-node','100',
+        '--change-load-values','yes',
+        '--load-value-KW-lower-end','20',
+        '--load-value-KW-upper-end','80'
     
     ]
 elif FEEDER_SYSTEM=="34Bus":
@@ -39,7 +43,11 @@ elif FEEDER_SYSTEM=="34Bus":
         '--fault-resistance-value',20,
         '--fault-resistance-lower-end', 0.05,
         '--fault-resistance-upper-end', 20,
-        '--folder', 'initial'    
+        '--folder', 'initial' ,
+        '--number-of-samples-for-each-node','100',
+        '--change-load-values','yes',
+        '--load-value-KW-lower-end','20',
+        '--load-value-KW-upper-end','80'   
     ]
         
 elif FEEDER_SYSTEM=="13Bus":

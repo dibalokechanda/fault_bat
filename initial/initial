@@ -2,7 +2,7 @@
     "feeder": "37Bus",
     "feeder_file": "ieee37.dss",
     "folder": "initial",
-    "fault_resistance_type": "fixed",
+    "fault_resistance_type": "variable",
     "fault_resistance_value": 20.0,
     "fault_resistance_lower_end": 0.05,
     "fault_resistance_upper_end": 20.0,

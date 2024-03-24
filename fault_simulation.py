@@ -1,10 +1,16 @@
 import py_dss_interface    
 
+# Python Built-in Modules Import
 import itertools
+from collections import Counter
+from pprint import pprint
 
+# Additional Library Imports
 import numpy as np
 from tqdm import tqdm
 from sklearn.preprocessing import StandardScaler
+from print_color import print
+
 
 class FaultSimulation:
     
@@ -34,7 +40,7 @@ class FaultSimulation:
         self.fault_class_labels=[]  
         self.labels_by_fault_node_name=[]                                                                                                                                                                                                                    
         self.fault_resistance_labels=[]                                                                                                               
-        self.fault_currrents_labels=[]
+        self.fault_currents_labels=[]
     
                                                                                                                                                     
     def get_features(self):    
@@ -96,7 +102,7 @@ class FaultSimulation:
                     self.fault_location_labels.append(self.feeder.bus_id_map[fault_name.split('_')[0]])                                 
                     self.fault_resistance_labels.append(fr)                                                                 
                     self.dss.circuit_set_active_element(fault_obj)                                                         # Set the fault object as active element to get the current 
-                    self.fault_currrents_labels.append(abs(self.dss.cktelement_currents()[0]))
+                    self.fault_currents_labels.append(abs(self.dss.cktelement_currents()[0]))
                     
                     # Execute the fault object deactivation command
                     self.dss.text(fault_obj_deactivate_command)      
@@ -105,7 +111,9 @@ class FaultSimulation:
                     count_lg+=1  
         
          # Convert the list of 2D dataset matrices into 3D matrix and standarize it 
-        final_dataset_lg= self.standardize(np.stack(self.dataset_lg))  
+        final_dataset_lg= self.standardize(np.stack(self.dataset_lg))
+        
+        # Return LG dataset only (Only needed if partial dataset need to be exported)  
         return final_dataset_lg                                         
     
                               
@@ -145,7 +153,7 @@ class FaultSimulation:
                     self.fault_location_labels.append(self.feeder.bus_id_map[ll_node[0].split('.')[0]])                                       
                     self.fault_resistance_labels.append(fr)                                                                                    
                     self.dss.circuit_set_active_element(fault_obj)
-                    self.fault_currrents_labels.append(abs(self.dss.cktelement_currents()[0]))                                                # Set the fault object as active element to get the current                                  
+                    self.fault_currents_labels.append(abs(self.dss.cktelement_currents()[0]))                                                # Set the fault object as active element to get the current                                  
                     
                     # Execute the fault object deactivation command   
                     self.dss.text(fault_obj_deactivate_command)                                                                                    
@@ -155,6 +163,8 @@ class FaultSimulation:
                     
         # Convert the list of 2D dataset matrices into 3D matrix and standarize it 
         final_dataset_ll= self.standardize(np.stack(self.dataset_ll))  
+        
+        # Return LL Dataset only (Only needed if partial dataset need to be exported)  
         return final_dataset_ll 
 
     
@@ -169,3 +179,49 @@ class FaultSimulation:
     
     def non_fault_simulation():
         pass
+    
+    
+    def get_dataset(self,print_info=True):
+        """Return the dataset
+        """
+        if print_info:
+            print('Dataset Information:')
+            print('---------------------')
+            
+            print(f'Dataset Shape:{self.standardize(np.stack(self.dataset)).shape} \n',color='yellow')
+            
+            print("Fault Detection Label Information",color='green',format='bold')
+            print('---------------------------------',color='green')
+            print(f"Count: {len(self.fault_detection_labels)}", tag='Fault Detection', tag_color='green', color='white')
+            print(f"Class Count: {len(set(self.fault_detection_labels))}", tag='Fault Detection', tag_color='green', color='white')
+            print(f"Per Class Count: {Counter(self.fault_detection_labels)} \n", tag='Fault Detection', tag_color='green', color='white')
+            
+            print("Fault Location Label Information",color='purple',format='bold')
+            print('---------------------------------',color='purple')
+            print(f"Count: {len(self.fault_location_labels)}", tag='Fault Location', tag_color='purple', color='white')
+            print(f"Class Count: {len(set(self.fault_location_labels))}", tag='Fault Location', tag_color='purple', color='white')
+            print(f"Per Class Count: {Counter(self.fault_location_labels)}\n", tag='Fault Location', tag_color='purple', color='white')
+            
+            
+            print("Fault Class Label Information",color='blue',format='bold')
+            print('---------------------------------',color='blue')
+            print(f"Count: {len(self.fault_class_labels)}", tag='Fault Class', tag_color='blue', color='white')
+            print(f"Class Count: {len(set(self.fault_class_labels))}", tag='Fault Class', tag_color='blue', color='white')
+            print(f"Per Class Count: {Counter(self.fault_class_labels)}\n", tag='Fault Class', tag_color='blue', color='white')
+            
+            print("Fault Resistance Label Information",color='cyan',format='bold')
+            print('---------------------------------',color='cyan')
+            print(f"Count: {len(self.fault_resistance_labels)}", tag='Fault Resistance', tag_color='cyan', color='white')
+            print(f"Max Resistance: {max(self.fault_resistance_labels)}", tag='Fault Resistance', tag_color='cyan', color='white')
+            print(f"Min Resistance: {min(self.fault_resistance_labels)}\n", tag='Fault Resistance', tag_color='cyan', color='white')
+            
+            
+            print("Fault Current Label Information",color='red',format='bold')
+            print('---------------------------------',color='red')
+            print(f"Count: {len(self.fault_currents_labels)}", tag='Fault Current', tag_color='red', color='white')
+            print(f"Max Current: {max(self.fault_currents_labels)}", tag='Fault Current', tag_color='red', color='white')
+            print(f"Min Current: {min(self.fault_currents_labels)}\n", tag='Fault Current', tag_color='red', color='white')
+
+
+                        
+        return self.standardize(np.stack(self.dataset)),self.fault_detection_labels,self.fault_location_labels,self.fault_class_labels,self.fault_resistance_labels,self.fault_currents_labels

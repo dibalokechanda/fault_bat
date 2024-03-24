@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from opendss_utils import * 
 from fault_simulation import FaultSimulation
 from arguments import parse_args
-from utils import store_feeder_info_to_json
+from utils import store_feeder_info_to_json, visualize_tsne
 
 def initialize():
     """
@@ -133,9 +133,13 @@ def main():
     # Get the fault simulator object 
     fault_simulator=FaultSimulation(dss,feeder,fault_information)
     
+    # Simulate Faults
     fault_simulator.fault_simulation_lg()
-    fault_simulator.fault_simulation_ll()
+    #fault_simulator.fault_simulation_ll()
     
+    dataset,fault_detection_labels,fault_location_labels,fault_class_labels,fault_resistance_labels,fault_currents_labels=fault_simulator.get_dataset(print_info=True)
+    print(dataset.shape)
+    visualize_tsne(args,dataset,fault_class_labels,savefigure=True)
     
 if __name__ == "__main__":
     main()
