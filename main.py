@@ -93,12 +93,13 @@ def generate_feeder_infos(args,dss,store_info=False):
         bus_id_map: dict
         neighborhood_dict_1_hop_by_bus_name:dict
         neighborhood_dict_2_hop_by_bus_name:dict
+        bus_with_loads_connected:list
                 
     # Construct the feeder object which contains the all the information related to feeder
     feeder = FeederInformation(args.feeder,bus_list,
                                 bus_list_1_phase, bus_list_2_phases,bus_list_3_phases
                                ,edge_list_by_bus_id,edge_list_by_bus_name,nodes,nodes_by_name,bus_id_map,
-                               neighborhood_dict_1_hop_by_bus_name,neighborhood_dict_2_hop_by_bus_name)
+                               neighborhood_dict_1_hop_by_bus_name,neighborhood_dict_2_hop_by_bus_name,bus_with_loads_connected)
     return feeder
 
 

@@ -11,6 +11,7 @@ from tqdm import tqdm
 from sklearn.preprocessing import StandardScaler
 from print_color import print
 
+ 
 
 class FaultSimulation:
     
