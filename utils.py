@@ -46,6 +46,7 @@ def visualize_tsne(args,dataset,fault_class,savefigure=False):
     dataset=np.reshape(dataset, (dataset.shape[0], -1))
     dataset_tsne = tsne.fit_transform(dataset)
     num_classes=len(set(fault_class))
+    
     tsne_result_df = pd.DataFrame({'tsne_1': dataset_tsne[:,0], 'tsne_2': dataset_tsne[:,1], 'label': fault_class})
     # Plotting with seaborn
     
@@ -64,3 +65,18 @@ def visualize_tsne(args,dataset,fault_class,savefigure=False):
     ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.0)
     if savefigure:
         plt.savefig(os.path.join('../..',os.path.splitext(args.folder)[0],'tsne_viz.png'))
+        
+        
+def dataset_export(args,dataset,fault_detection_labels,path_to_save='dataset'):
+    
+    print(os.getcwd())
+    
+    try:
+        os.mkdir(os.path.join('../..',args.folder,path_to_save))
+    except OSError as error:
+        pass
+   
+    np.save(os.path.join('../..',args.folder,path_to_save,'dataset.npy'), dataset)
+    np.save(os.path.join('../..',args.folder,path_to_save,'fault_detection_labels.npy'), fault_detection_labels)   
+   
+                  

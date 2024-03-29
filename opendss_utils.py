@@ -84,14 +84,16 @@ def get_nodes(dss,bus_list):
 
 def get_connected_loads(dss,bus_list):
     bus_with_loads_connected=[]
+    loads_name=[]
     connected_loads_name=[]
     for active_bus in bus_list:
         dss.circuit_set_active_bus(active_bus)
         if len(dss.bus_load_list())!=0:
-            connected_loads_name.append(dss.bus_load_list())
+            loads_name.append(dss.bus_load_list())
             bus_with_loads_connected.append(active_bus)
-            
-    return bus_with_loads_connected,connected_loads_name
+    for load in  loads_name:
+        connected_loads_name.extend(load)    
+    return bus_with_loads_connected,connected_loads_name    
 
 def get_connectivity_info(dss,bus_list):
     
@@ -140,13 +142,12 @@ def get_resistance_values(args,viz=False,**kwargs):
         number_of_samples=args.number_of_samples_for_each_node
         
         fault_resistances=[]
-        for _ in range(3):
+        
         # Set a random seed 
-            seed=random.randint(1,1000)
-            np.random.seed(seed)
+        np.random.seed(random.randint(1,1000))
         # Generate fault resistance value by sampling from a uniform distribution
-            fault_resistance_samples_per_node= list(np.round(np.random.uniform(lower_bound,upper_bound,number_of_samples), decimals=decimal_precision))
-            fault_resistances.extend(fault_resistance_samples_per_node)  
+        fault_resistance_samples_per_node= list(np.round(np.random.uniform(lower_bound,upper_bound,number_of_samples), decimals=decimal_precision))
+        fault_resistances.extend(fault_resistance_samples_per_node)  
                 
     if viz==True:
         num_bins = kwargs.get('num_bins', 10)  # Using .get() method to get the value or a default value if not found
@@ -162,7 +163,7 @@ def get_resistance_values(args,viz=False,**kwargs):
     return fault_resistances
 
 
-def get_load_values(args,**kwargs):
+def get_load_values(args,factors,**kwargs):
     if args.change_load_values=='no':
         pass
     
@@ -177,7 +178,7 @@ def get_load_values(args,**kwargs):
         number_of_samples=args.number_of_samples_for_each_node
         
         # Generate load values by sampling from a uniform distribution
-        lds= list(np.round(np.random.uniform(upper_bound_KW,lower_bound_KW,number_of_samples),decimals=decimal_precision))                                                       
+        lds= list(np.round(np.random.uniform(upper_bound_KW,lower_bound_KW,number_of_samples*factors[args.feeder]),decimals=decimal_precision))                                                       
         
         return lds
 

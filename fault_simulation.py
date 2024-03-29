@@ -15,6 +15,15 @@ from print_color import print
 
 class FaultSimulation:
     
+    """Fault Simulation Class 
+      - get_features --> Gets the voltage magnitude and phase values of all the buses in the feeder system 
+      - standardize --> Perform standarization to the feature matrix with StandardScaler()
+      - fault_simulation_lg --> Perform Line to Ground Fault Simulation 
+      - fault_simulation_ll --> Perform Line to Line Fault Simulation 
+      - non_fault_simulation --> Perform a simulation for non-fault events
+      
+    """
+    
     def __init__(self,dss,feeder,fault_information):
         
         self.dss=dss
@@ -167,7 +176,7 @@ class FaultSimulation:
         
         # Return LL Dataset only (Only needed if partial dataset need to be exported)  
         return final_dataset_ll 
-
+    
     
     def fault_simulation_llg():
         pass
@@ -178,9 +187,25 @@ class FaultSimulation:
     def fault_simulation_llg():
         pass
     
-    def non_fault_simulation():
-        pass
-    
+    def non_fault_simulation(self):
+            
+        lds= self.fault_information.load_values 
+        loads=self.feeder.connected_loads_name
+        
+        for ld in tqdm(lds,desc="Non Fault Event Simulation"):
+            for load in loads:
+                self.dss.text(f'{load}.KW={str(ld)}')  
+                                
+            self.dss.text(f'Solve mode=direct')                                                                                            
+            self.dataset_non_fault.append(self.get_features())
+            self.dataset.append(self.get_features())                                                                                   
+           
+            self.fault_detection_labels.append(0)
+            self.fault_class_labels.append(self.fault_class_map['Non_Fault']) 
+            self.fault_location_labels.append(-100)                                                                                                                               
+            self.fault_resistance_labels.append(0)
+            self.fault_currents_labels.append(0)                                                                                               
+                                                                                         
     
     def get_dataset(self,print_info=True):
         """Return the dataset
