@@ -46,6 +46,8 @@ def exclude_buses(feeder_name,bus_list):
         bus_to_exclude =['sourcebus']  
     elif feeder_name=="123Bus":
         bus_to_exclude =['610','300_open','94_open','150']
+    elif feeder_name=="8500-Node":
+        bus_to_exclude =['sourcebus']
         
     updated_bus_list = [bus for bus in bus_list if bus not in bus_to_exclude]
     return bus_to_exclude,updated_bus_list

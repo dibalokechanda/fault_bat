@@ -49,7 +49,6 @@ def generate_feeder_infos(args,dss,store_info=False):
     # Get connected load names and the name of the buses with connected loads
     bus_with_loads_connected,connected_loads_name=get_connected_loads(dss,bus_list)
   
-    
     # Get connectivity info of the feeder system
     edge_list_by_bus_id,edge_list_by_bus_name,bus_id_map=get_connectivity_info(dss,bus_list)
       
@@ -102,7 +101,8 @@ def generate_feeder_infos(args,dss,store_info=False):
     feeder = FeederInformation(args.feeder,bus_list,
                                 bus_list_1_phase, bus_list_2_phases,bus_list_3_phases
                                ,edge_list_by_bus_id,edge_list_by_bus_name,nodes,nodes_by_name,bus_id_map,
-                               neighborhood_dict_1_hop_by_bus_name,neighborhood_dict_2_hop_by_bus_name,bus_with_loads_connected,connected_loads_name)
+                               neighborhood_dict_1_hop_by_bus_name,neighborhood_dict_2_hop_by_bus_name,
+                               bus_with_loads_connected,connected_loads_name)
     return feeder
 
 
@@ -113,7 +113,7 @@ def generate_fault_infos(args):
     """
     # Get fault resistance values
     fault_resistances=get_resistance_values(args,viz=False,num_bins=20,decimal_precision=2)
-    print(len(fault_resistances))
+
     
     # Factors 
     factors={'13Bus':9*3,
@@ -146,14 +146,17 @@ def main():
     
     # Simulate Faults
     fault_simulator.fault_simulation_lg()
+    fault_simulator.fault_simulation_ll()
+    fault_simulator.fault_simulation_llg()
+    fault_simulator.fault_simulation_lll()
+    fault_simulator.fault_simulation_lllg()
     fault_simulator.non_fault_simulation()
-    
     
     dataset,fault_detection_labels,fault_location_labels,fault_class_labels,fault_resistance_labels,fault_currents_labels=fault_simulator.get_dataset(print_info=True)
     
-    visualize_tsne(args,dataset,fault_class_labels,savefigure=True)
+    visualize_tsne(args,dataset,fault_class_labels,savefigure=False)
     
-    dataset_export(args,dataset,fault_detection_labels)
+    dataset_export(args,dataset,feeder.edge_list_by_bus_id,fault_detection_labels,fault_location_labels,fault_class_labels,fault_resistance_labels,fault_currents_labels)
     
 if __name__ == "__main__":
     main()

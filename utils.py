@@ -67,9 +67,7 @@ def visualize_tsne(args,dataset,fault_class,savefigure=False):
         plt.savefig(os.path.join('../..',os.path.splitext(args.folder)[0],'tsne_viz.png'))
         
         
-def dataset_export(args,dataset,fault_detection_labels,path_to_save='dataset'):
-    
-    print(os.getcwd())
+def dataset_export(args,dataset,edge_list_by_bus_id,fault_detection_labels,fault_location_labels,fault_class_labels,fault_resistance_labels,fault_currents_labels,path_to_save='dataset'):
     
     try:
         os.mkdir(os.path.join('../..',args.folder,path_to_save))
@@ -77,6 +75,12 @@ def dataset_export(args,dataset,fault_detection_labels,path_to_save='dataset'):
         pass
    
     np.save(os.path.join('../..',args.folder,path_to_save,'dataset.npy'), dataset)
-    np.save(os.path.join('../..',args.folder,path_to_save,'fault_detection_labels.npy'), fault_detection_labels)   
+    np.save(os.path.join('../..',args.folder,path_to_save,'edge_list.npy'), edge_list_by_bus_id)
+    np.save(os.path.join('../..',args.folder,path_to_save,'fault_detection_labels.npy'), fault_detection_labels)
+    np.save(os.path.join('../..',args.folder,path_to_save,'fault_location_labels.npy'), fault_location_labels)
+    np.save(os.path.join('../..',args.folder,path_to_save,'fault_class_labels.npy'), fault_class_labels)
+    np.save(os.path.join('../..',args.folder,path_to_save,'fault_resistance_labels.npy'), fault_resistance_labels)     
+    np.save(os.path.join('../..',args.folder,path_to_save,'fault_currents_labels.npy'), fault_currents_labels) 
+   
    
                   
