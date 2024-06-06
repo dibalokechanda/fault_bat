@@ -6,7 +6,7 @@
     "fault_resistance_value": 20.0,
     "fault_resistance_lower_end": 0.05,
     "fault_resistance_upper_end": 20.0,
-    "number_of_samples_for_each_node": 2,
+    "number_of_samples_for_each_node": 1,
     "change_load_values": "yes",
     "load_value_KW_lower_end": 20.0,
     "load_value_KW_upper_end": 80.0

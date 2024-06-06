@@ -16,15 +16,6 @@ import networkx as nx
  
 class OpenDSS():
     """Interfacing to OpenDSS with py_dss_interface
-
-    Attributes:
-        feeder_name:str: Name of feeder e.g.  13Bus, 34Bus, 37Bus, 123Bus,
-        feeder_init_dss_file:str: Initial OpenDSS file that need to get excuted to load the DSS object e.g. 
-                                  IEEE13Nodeckt.dss, ieee37.dss, Run_IEEE34Mod1.dss, IEEE123Master.dss
-
-    Methods:
-        get_dss_obj(): Returns the initialized OpenDSS object
-
     """
     def __init__(self,feeder_name,feeder_init_dss_file):
         self.script_path = os.path.dirname(os.path.abspath('__file__'))                      
@@ -73,6 +64,8 @@ def get_buses_by_phase(dss,updated_bus_list):
     return bus_list_1_phase, bus_list_2_phases,bus_list_3_phases
     
 def get_nodes(dss,bus_list):
+    """Return node name for all the buses
+    """
     nodes_by_name=[]                                                                                                    
     nodes=[]                                                                                                            
 
@@ -85,6 +78,8 @@ def get_nodes(dss,bus_list):
     return nodes_by_name,nodes
 
 def get_connected_loads(dss,bus_list):
+    """Return the bus with connected loads and also the load names 
+    """
     bus_with_loads_connected=[]
     loads_name=[]
     connected_loads_name=[]
@@ -98,6 +93,10 @@ def get_connected_loads(dss,bus_list):
     return bus_with_loads_connected,connected_loads_name    
 
 def get_connectivity_info(dss,bus_list):
+    """Returns graph connectivity information in edge list format. In 2 formats
+     - Edge list by bus name which provides information of edge between two bus
+     - Edge list by bus id 
+    """
     
     edge_list_by_bus_name=[]                                                                                                       
     edge_list_by_bus_id=[]  
@@ -123,7 +122,6 @@ def get_resistance_values(args,viz=False,**kwargs):
        Two ways are specified for generating the resistance values: fixed and variable
        - fixed: returns the same value repeated for number of sampels 
        - variable: Assuming data is generated for three-phase (node) bus, for each phase (node) a random seed is set and resistance value is sampled from a uniform distribution
-       
     If viz is set to True it will create a histogram of sampled values and save the image to --folder
     """
     if args.fault_resistance_type=="fixed":

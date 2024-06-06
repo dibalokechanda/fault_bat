@@ -5,8 +5,7 @@ This repository holds the code to generate the dataset for fault diagnosis in a 
 - 34 BUS
 - 37 BUS
 - 123 BUS
-- 123 BUS
-- 8500 BUS
+- 8500 NODE
 
 Learn more about these feeder systems from these resources [[1](https://ieeexplore.ieee.org/abstract/document/119237)], [[2](https://ieeexplore.ieee.org/abstract/document/8063903)], [[3](https://cmte.ieee.org/pes-testfeeders/resources/)]. 
 
@@ -59,7 +58,10 @@ As an example, the folder structure for the 37Bus is shown below.
 |   ├── fault_location_labels.npy
 |   ├── fault_class_labels.npy
 |   ├── fault_resistance_labels.npy
-│   └── fault_currents_labels.npy
+|   ├── fault_currents_labels.npy
+|   ├── 1_hop_by_bus_name.npy
+|   ├── 2_hop_by_bus_name.npy
+│   └── bus_id_map.npy
 |  
 ├── 37Bus_Dataset
 └── feeder_infos
@@ -81,7 +83,7 @@ Then `cd` into the root of the directory. Install the packages from the requirem
 pip install -r requirements.txt
 ```
 
-**Import Note**: This code is implemented using `py_dss_interface==1.0.2` which is the older version.
+**Important Note**: This code is implemented using `py_dss_interface==1.0.2` which is the older version.
 
 ### Specify necessary parameters in `script.py`
 

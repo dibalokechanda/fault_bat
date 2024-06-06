@@ -12,7 +12,7 @@ if FEEDER_SYSTEM=="8500-Node":
         '--fault-resistance-value','20',
         '--fault-resistance-lower-end', '0.05',
         '--fault-resistance-upper-end','20',
-        '--number-of-samples-for-each-node','2',
+        '--number-of-samples-for-each-node','1',
         '--change-load-values','yes',
         '--load-value-KW-lower-end','20',
         '--load-value-KW-upper-end','80'
