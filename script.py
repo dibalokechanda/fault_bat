@@ -1,6 +1,6 @@
 import subprocess
 
-FEEDER_SYSTEM='37Bus' # Change to select different feeder systems
+FEEDER_SYSTEM='8500-Node' # Change to select different feeder systems
 
 if FEEDER_SYSTEM=="8500-Node":
     command = [
@@ -12,7 +12,7 @@ if FEEDER_SYSTEM=="8500-Node":
         '--fault-resistance-value','20',
         '--fault-resistance-lower-end', '0.05',
         '--fault-resistance-upper-end','20',
-        '--number-of-samples-for-each-node','10',
+        '--number-of-samples-for-each-node','2',
         '--change-load-values','yes',
         '--load-value-KW-lower-end','20',
         '--load-value-KW-upper-end','80'
@@ -48,7 +48,6 @@ elif FEEDER_SYSTEM=="37Bus":
         '--change-load-values','yes',
         '--load-value-KW-lower-end','20',
         '--load-value-KW-upper-end','80'
-    
     ]
 elif FEEDER_SYSTEM=="34Bus":
         command = [

@@ -1,6 +1,5 @@
 #Imports
 # Python Imports
-import os
 from dataclasses import dataclass
 
 # Local Imports
@@ -11,7 +10,8 @@ from utils import store_feeder_info_to_json, visualize_tsne, dataset_export
 
 def initialize():
     """
-     - Get the arguments passed in
+     - Get the arguments passed in through argument parse
+     - Dump the arguments to a json file
      - Initialize the dss object
     """
     
@@ -156,7 +156,16 @@ def main():
     
     visualize_tsne(args,dataset,fault_class_labels,savefigure=False)
     
-    dataset_export(args,dataset,feeder.edge_list_by_bus_id,fault_detection_labels,fault_location_labels,fault_class_labels,fault_resistance_labels,fault_currents_labels)
+    dataset_export(args,dataset,
+                   feeder.edge_list_by_bus_id,
+                   fault_detection_labels,
+                   fault_location_labels,
+                   fault_class_labels,
+                   fault_resistance_labels,
+                   fault_currents_labels,
+                   feeder.neighborhood_dict_1_hop_by_bus_name,
+                   feeder.neighborhood_dict_2_hop_by_bus_name,
+                   feeder.bus_id_map)
     
 if __name__ == "__main__":
     main()

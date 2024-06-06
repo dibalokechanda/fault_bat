@@ -16,11 +16,11 @@ As an example see the 37Bus system [folder](https://github.com/dibalokechanda/fa
 
  - `dataset.npy`: This contains the feature tensor with dimensions *Number of Samples X Number of Nodes in the feeder system X 6*
 
- - `edge_list.npy`: This contains the edge list matrix which contains the graph connectivity information. This can processed with libraries like `NetworkX` to generate the graph representing the distribution system.
+ - `edge_list.npy`: This contains the edge list matrix which is the graph connectivity information. This can processed with libraries like `NetworkX` to generate the graph representing the distribution system.
 
  - `fault_detection_labels.npy`: This contains the binary fault detection labels. For a fault event, the label is $1$ and for a non-fault event, the label is $0$.
 
- - `fault_location_labels.npy`: This contains the fault location label for three-phase nodes in the distribution system. 
+ - `fault_location_labels.npy`: This contains the fault location label for three-phase nodes in the distribution system. The location labels is encoded to an integer value. Use `bus_id_map` to see which bus name corresponds to which integer value.
 
  - `fault_class_labels.npy`: This contains the fault classification label for a fault event. The fault classes are encoded as follows
     
@@ -33,6 +33,12 @@ As an example see the 37Bus system [folder](https://github.com/dibalokechanda/fa
 - `fault_resistance_labels.npy`: This contains the numerical value for fault resistance for the fault event. We recommend normalizing the value before using it in a regression task. 
 
 - `fault_currents_labels.npy`: This contains the numerical value for the fault current for the fault event. We strongly recommend normalizing the value before using it as the range and variance are large.
+
+- `1_hop_by_bus_name.npy` : This holds the one-hop neighborhood node name for all the nodes in the feeder system.
+
+- `2_hop_by_bus_name.npy` : This holds the two-hop neighborhood node name for all the nodes in the feeder system.
+
+- `bus_id_map.npy` : This holds the mapping between bus names and the corresponding unique integer id. 
 
 The other files contain the metadata for simulation settings and the feeder system.
 
@@ -117,7 +123,11 @@ These are the command line arguments for running the code. Following is an expla
 
 - `--number-of-samples-for-each-node`: For each node in the feeder system, how many data points are to be generated.
 
-- `--change-load-values`: If the load value needs to be changed or not. We
+- `--change-load-values`: If the load value needs to be changed or not. We recommend setting it to 'yes' if you plan to use the dataset for fault detection. Changing the load value simulates a non-fault event.
+
+- `--load-value-KW-lower-end`: The load value is sampled from a uniform distribution. This parameter defines the lower end of the uniform distribution.
+
+- `--load-value-KW-upper-end`: The load value is sampled from a uniform distribution. This parameter defines the upper end of the uniform distribution.
 
 ### Execute the code
 
